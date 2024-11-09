@@ -1,0 +1,19 @@
+[package]
+name = "rust_practice_lab"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+
+[[bin]]
+name = "pointers"
+path = "src/bin/pointers.rs"
+
+[[bin]]
+name = "polymorphism"
+path = "src/bin/polymorphism.rs"
+
+[[bin]]
+name = "iterators"
+path = "src/bin/iterators.rs"
