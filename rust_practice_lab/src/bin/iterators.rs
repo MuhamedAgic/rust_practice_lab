@@ -1,6 +1,6 @@
 mod polymorphism;               // rs file
-pub use polymorphism::poly;     // file::mod_name
-use crate::polymorphism::Vehicles;
+pub use polymorphism::poly;     // file_name::mod_name
+use polymorphism::Vehicles;
 
 fn main() {
     let numbers: Vec<i32> = vec![1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -124,10 +124,12 @@ fn main() {
                 None
             }
         })
-        .fold(0.0, |acc, car| acc + car.vehicle.price); // here only cars are left
+        .fold(0.0, |acc, car| acc + car.vehicle.price); // here, only cars are left
 
     println!("The sum of all the car prizes is: {}", car_sum_prices);
 
     println!("\n====================================================================================================\n");
+
+
 
 }
