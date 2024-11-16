@@ -11,4 +11,8 @@ fn main() {
     println!("Variable a:\n    Type: {}\n    value: {}\n    address: {:p}", type_of(&a), a, &a);
     println!("Variable b:\n    Type: {}\n    value: {}\n    address: {:p}\n    address of value b points to: {:p}", type_of(&b), b, &b, b);
     println!("Raw pointer to a: {:p}", a_ptr);
+
+    println!("\n====================================================================================================\n");
+
+
 }
