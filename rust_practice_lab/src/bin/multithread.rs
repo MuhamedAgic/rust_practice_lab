@@ -1,9 +1,12 @@
+use std::time::{Duration, Instant};
+use std::thread;
+use itertools::Itertools;
+use rayon::prelude::*;
 use colored::*;
 use rand::Rng;
-use rayon::prelude::*;
-use std::time::{Duration, Instant};
 
-#[derive(Debug)]
+
+#[derive(Debug, Copy, Clone)]
 struct Item {
     weight: i32,
     value: i32
@@ -20,11 +23,46 @@ impl Item {
     }
 }
 
-fn get_knapsack_items(items: &Vec<Item>, weight_limit: i32) -> Vec<Item> {
-    for item in items {
+fn get_knapsack_items(items: &mut Vec<Item>, weight_limit: i32) -> Vec<Item> {
+    let mut sum = 0;
+    let max_possible_combinations = items
+        .iter()
+        .sorted_by(|a, b| a.weight.cmp(&b.weight))
+        .take_while(|&&item| {
+            sum += item.weight;
+            sum < weight_limit
+        })
+        .count();
 
+    println!("\nMax {} possible combinations\n", max_possible_combinations);
+
+    let mut highest_combined_value = 0;
+    let mut knapsack_items: Vec<Item> = Vec::new();
+    for i in 1..=max_possible_combinations {
+        for combination in items.iter().combinations(i) {
+            let mut current_combined_value: i32 = combination.iter().map(|item| item.value).sum();
+            let mut current_combined_weight: i32 = combination.iter().map(|item| item.weight).sum();
+            if current_combined_value > highest_combined_value  && current_combined_weight <= weight_limit {
+                highest_combined_value = current_combined_value;
+                knapsack_items = combination.into_iter().cloned().collect();
+            }
+        }
     }
-    todo!()
+    knapsack_items
+}
+
+fn process_knapsack_combinations(items: &mut Vec<Item>,
+                                 highest_combined_value: i32,
+                                 n_combinations: usize,
+                                 weight_limit: i32) -> Option<(i32, Vec<Item>)> {
+    for combination in items.iter().combinations(n_combinations) {
+        let mut current_combined_value: i32 = combination.iter().map(|item| item.value).sum();
+        let mut current_combined_weight: i32 = combination.iter().map(|item| item.weight).sum();
+        if current_combined_value > highest_combined_value  && current_combined_weight <= weight_limit {
+            return Some( (current_combined_value, combination.into_iter().cloned().collect()) );
+        }
+    }
+    None
 }
 
 
@@ -62,9 +100,11 @@ fn main() {
 
     // knapsack problem, give the items where the combined weight can't exceed limit
     // but where the value is as high as possible
+    const KNAPSACK_ITEM_COUNT: u8 = 25;
+    const KNAPSACK_WEIGHT_LIMIT: i32 = 400;
 
     let mut knapsack: Vec<Item> = Vec::new();
-    for i in 1..10 {
+    for i in 0..KNAPSACK_ITEM_COUNT {
         let mut item = Item::new(0, 0);
         item.randomize();
         knapsack.push(item);
@@ -74,12 +114,57 @@ fn main() {
         println!("Item {}: {:?}", i, item);
     }
 
-    // let best_items = get_knapsack_items(&knapsack);
-    // println!("Best items:");
-    // for (i, item) in knapsack.iter().enumerate() {
-    //     println!("    Item {}: {:?}", i, item);
-    // }
-    // println!("Total value: {}", best_items.iter().fold(0, |acc, item| acc + item.value));
+    println!("\n====================================================================================================\n");
+
+    println!("\nUsing {} execution", "non parallel".red());
+
+    let start = Instant::now();
+    let best_items = get_knapsack_items(&mut knapsack, KNAPSACK_WEIGHT_LIMIT);
+    let best_items_again = get_knapsack_items(&mut knapsack, KNAPSACK_WEIGHT_LIMIT);
+    let elapsed = start.elapsed().as_secs();
+    println!("\nBest items:");
+    for (i, item) in best_items.iter().enumerate() {
+        println!("    Item {}: {:?}", i, item);
+    }
+    println!("Total weight: {}", best_items.iter().fold(0, |acc, item| acc + item.weight));
+    println!("Total value: {}", best_items.iter().fold(0, |acc, item| acc + item.value));
+    println!("Execution time in seconds, {}: {}", "not parallel".red(), elapsed);
+
+    println!("\n====================================================================================================\n");
+
+    println!("Using {} execution", "parallel".green());
+
+    let knapsack_one = knapsack.clone();
+    let knapsack_two = knapsack.clone();
+
+    let knapsack_first = std::thread::spawn(
+        move || {
+            let mut knapsack_clone = knapsack_one;
+            let best_items = get_knapsack_items(&mut knapsack_clone, KNAPSACK_WEIGHT_LIMIT);
+            best_items
+        }
+    );
+
+    let knapsack_second = std::thread::spawn(
+        move || {
+            let mut knapsack_clone = knapsack_two;
+            let best_items = get_knapsack_items(&mut knapsack_clone, KNAPSACK_WEIGHT_LIMIT);
+            best_items
+        }
+    );
+    let start = Instant::now();
+    let result_one = knapsack_first.join().unwrap();
+    let result_two = knapsack_second.join().unwrap();
+    let elapsed = start.elapsed().as_secs();
+    println!("\nBest items:");
+    for (i, item) in result_two.iter().enumerate() {
+        println!("    Item {}: {:?}", i, item);
+    }
+    println!("Total weight: {}", result_two.iter().fold(0, |acc, item| acc + item.weight));
+    println!("Total value: {}", result_two.iter().fold(0, |acc, item| acc + item.value));
+    println!("Execution time in seconds, {}: {}", "parallel".green(), elapsed);
+
+    println!("\n====================================================================================================\n");
 
 
 }
