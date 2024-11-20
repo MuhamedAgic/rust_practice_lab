@@ -21,3 +21,7 @@ path = "src/bin/polymorphism.rs"
 [[bin]]
 name = "iterators"
 path = "src/bin/iterators.rs"
+
+[[bin]]
+name = "multithread"
+path = "src/bin/multithread.rs"
