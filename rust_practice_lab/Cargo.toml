@@ -4,10 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+cxx = "1.0.130"
 colored = "2"
 rayon = "1.10.0"
 rand = "0.8.5"
 itertools = "0.13.0"
+
+
+[build-dependencies]
+cxx-build = "1.0.130"
 
 
 [[bin]]
@@ -25,3 +30,13 @@ path = "src/bin/iterators.rs"
 [[bin]]
 name = "multithread"
 path = "src/bin/multithread.rs"
+
+
+[lib]
+name = "rust_practice_lab"
+path = "src/lib.rs"
+crate-type = ["cdylib", "lib", "staticlib"]
+
+
+[target.'cfg(target_env = "msvc")']
+rustflags = ["-C", "target-feature=+crt-static"]
