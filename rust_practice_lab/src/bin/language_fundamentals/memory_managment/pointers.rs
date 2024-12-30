@@ -1,3 +1,6 @@
+mod reference_counting;
+mod weak_references;
+
 use std::any::type_name;
 
 fn type_of<T>(_: &T) -> &'static str {
@@ -21,8 +24,8 @@ fn main() {
         let mut e = &c as *const i32; // raw pointer to c
         println!("Value of e: {}", *e); // dereferencing raw pointer only allowed in unsafe block
 
-        e = &d as *const i32;
-        println!("Value of e: {}", *e); // pointer now points to d
+        e = &d as *const i32; // pointer now points to d
+        println!("Value of e: {}", *e);
     }
 
 }
