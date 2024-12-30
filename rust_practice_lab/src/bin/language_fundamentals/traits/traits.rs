@@ -1,5 +1,7 @@
 use poly::Vehicle;
 
+// A kind of polymorphism
+
 #[derive(Debug)]
 pub enum Vehicles {
     Car(poly::Car),

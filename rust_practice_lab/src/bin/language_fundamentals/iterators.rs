@@ -1,6 +1,7 @@
-mod polymorphism;               // rs file
-pub use polymorphism::poly;     // file_name::mod_name
-use polymorphism::Vehicles;
+mod traits;
+// rs file
+pub use traits::traits::poly;     // file_name::mod_name
+pub use traits::traits::Vehicles;
 
 fn main() {
     let numbers: Vec<i32> = vec![1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -33,7 +34,7 @@ fn main() {
     );
 
     // A vec with objects that implement the vehicle trait
-    let vehicle_vec: Vec<polymorphism::Vehicles> = vec![
+    let vehicle_vec: Vec<traits::traits::Vehicles> = vec![
         Vehicles::Car(car),
         Vehicles::Boat(boat),
         Vehicles::AmphibiousBoat(hybrid_boat),
@@ -77,7 +78,7 @@ fn main() {
     println!("\n====================================================================================================\n");
 
     // filter only cheap vehicles
-    let cheap_vehicles: Vec<&polymorphism::Vehicles> = vehicle_vec
+    let cheap_vehicles: Vec<&traits::traits::Vehicles> = vehicle_vec
         .iter()
         .filter(|&vehicle| match vehicle {
             Vehicles::AmphibiousBoat(hybrid_boat) => hybrid_boat.boat.vehicle.price < 65000.0,
