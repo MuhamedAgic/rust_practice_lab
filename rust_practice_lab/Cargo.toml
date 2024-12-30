@@ -25,6 +25,10 @@ name = "polymorphism"
 path = "src/bin/language_fundamentals/traits/traits.rs"
 
 [[bin]]
+name = "if_let_constructions"
+path = "src/bin/language_fundamentals/control_flow/if_let_constructions.rs"
+
+[[bin]]
 name = "iterators"
 path = "src/bin/language_fundamentals/iterators.rs"
 
@@ -36,6 +40,10 @@ path = "src/bin/concurrency_and_parallelism/multithread.rs"
 [[bin]]
 name = "async_await"
 path = "src/bin/concurrency_and_parallelism/async_await.rs"
+
+[[bin]]
+name = "channels"
+path = "src/bin/concurrency_and_parallelism/channels.rs"
 
 
 [lib]
