@@ -9,6 +9,7 @@ colored = "2"
 rayon = "1.10.0"
 rand = "0.8.5"
 itertools = "0.13.0"
+tokio = { version = "1.0.0", features = ["rt", "rt-multi-thread", "macros"] }
 
 
 [build-dependencies]
@@ -17,19 +18,24 @@ cxx-build = "1.0.130"
 
 [[bin]]
 name = "pointers"
-path = "src/bin/pointers.rs"
+path = "src/bin/language_fundamentals/memory_managment/pointers.rs"
 
 [[bin]]
 name = "polymorphism"
-path = "src/bin/polymorphism.rs"
+path = "src/bin/language_fundamentals/traits/traits.rs"
 
 [[bin]]
 name = "iterators"
-path = "src/bin/iterators.rs"
+path = "src/bin/language_fundamentals/iterators.rs"
 
 [[bin]]
 name = "multithread"
-path = "src/bin/multithread.rs"
+path = "src/bin/concurrency_and_parallelism/multithread.rs"
+
+
+[[bin]]
+name = "async_await"
+path = "src/bin/concurrency_and_parallelism/async_await.rs"
 
 
 [lib]

@@ -1,3 +1,14 @@
+mod threads;
+mod async_await;
+mod mutexes;
+mod atomics;
+mod channels;
+mod futures;
+mod async_stream;
+mod pinning;
+mod rayon_parallel;
+mod crossbeam_utilities;
+
 use std::error::Error;
 use std::ops::Deref;
 use std::sync::{Arc, Mutex};
@@ -44,7 +55,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // knapsack problem, give the items where the combined weight can't exceed limit
     // but where the value is as high as possible
-    const KNAPSACK_ITEM_COUNT: u8 = 24;
+    const KNAPSACK_ITEM_COUNT: u8 = 25;
     const KNAPSACK_WEIGHT_LIMIT: i32 = 400;
 
     let mut knapsack: Vec<Item> = Vec::new();
